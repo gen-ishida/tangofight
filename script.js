@@ -1,22 +1,23 @@
 //camelCase
-let canvas, ctx, canvasSize;
+let viewCanvas, viewCtx, canvas, ctx, canvasSize = [0,0];
 let QR;
-
-const Qdata = ["星室庁","リズム0","赤の女王仮説","紫外破綻","琥珀の道","黒甜郷","國華","海洋無酸素事変","破局噴火","ソディの6球連鎖","漁火光柱","天網恢々疎にして漏らさず","死喩","ストックホルムの血浴","銃・病原菌・鉄","バッサ・モデネーゼの悪魔たち","冬至の生贄","恐怖の報酬","繧繝","反閇","鋒鋩","恐惶","騏驥驊驑","補陀落渡海","華燭の典","侵食輪廻"];
 
 window.addEventListener('DOMContentLoaded',async e=>{
 
-  canvas = document.getElementById('canvas');
+  viewCanvas = document.getElementById('canvas');
+  viewCtx = viewCanvas.getContext('2d');
+  canvas = document.createElement('canvas');
   ctx = canvas.getContext('2d');
+  canvasGlsl = document.createElement('canvas');
 
+  loadGlsl(canvasSize);
   window.addEventListener('resize',()=>{
     resizeCanvas();
   });
   resizeCanvas();
 
-  initDrawer();
 
-  loadGlsl(canvasSize);
+  initDrawer();
 
   if (localStorage.getItem(location.href+'/history') === null) {
     clearHistory();
@@ -35,8 +36,7 @@ window.addEventListener('DOMContentLoaded',async e=>{
     colorLight : "#ffffff",
     correctLevel : QRCode.CorrectLevel.L
   });
-
-  for (let i = 0;i < 100000;i++) {
+  for (;;) {
     main();
     await new Promise(r=>requestAnimationFrame(r));
   }
@@ -44,12 +44,10 @@ window.addEventListener('DOMContentLoaded',async e=>{
 
 const colorPalette = {
   bg: '#222222',
-  line: '#888888',
   text: '#eeeeee',
   bg2: '#666666',
   bg3: '#222222',
 }
-
 
 const choose = arr => arr[Math.floor(Math.random()*arr.length)];
 
@@ -71,7 +69,6 @@ let seed1 = Math.random(),
 function main() {
   ctx.clearRect(0,0,...canvasSize);
 
-  console.log(seed1,seed2);
   dt = Date.now()/1000 - t0;
   updateGlsl({
     dt,
@@ -82,8 +79,6 @@ function main() {
     seed2,
   });
 
-  colorPalette.bg2 = colorPalette.line = ctx.createPattern(canvasGlsl,'');
-
   updateGlsl({
     dt,
     scale1:getGridSize(mulv(canvasSize,[1,0.45]),QNow[0]),
@@ -93,10 +88,11 @@ function main() {
     seed2,
   });
 
-  colorPalette.bg3 = ctx.createPattern(canvasGlsl,'');
-
-  ctx.fillStyle = colorPalette.bg3;
   ctx.fillRect(0,0,...canvasSize);
+  ctx.drawImage(canvasGlsl, 0, 0);
+
+  //ctx.globalCompositeOperation = "screen";
+  ctx.fillStyle = colorPalette.bg3;
 
   wordFrame(
     [0,0],
@@ -115,6 +111,8 @@ function main() {
   gyobiFrame();
 
   mouseLine();
+
+  viewCtx.drawImage(canvas,0,0);
 }
 
 
@@ -139,5 +137,10 @@ function getGridSize(frameSize,text) {
 
 
 function resizeCanvas() {
-  canvasSize = [canvas.width,canvas.height] = [window.innerWidth,window.innerHeight];
+  canvasSize
+    = [canvas.width,canvas.height]
+    = [viewCanvas.width,viewCanvas.height]
+    = [canvasGlsl.width,canvasGlsl.height]
+    = [window.innerWidth,window.innerHeight];
+  gl.viewport(0, 0, ...canvasSize);
 }

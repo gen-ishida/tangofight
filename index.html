@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>tangofight</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.js" integrity="sha512-is1ls2rgwpFZyixqKFEExPHVUUL+pPkBEPw47s/6NDQ4n1m6T/ySeDW3p54jp45z2EJ0RSOgilqee1WhtelXfA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="json.js"></script>
     <script src="fscode.js"></script>
     <script src="glslsetting.js"></script>
     <script src="canvas.js"></script>
@@ -13,14 +14,20 @@
       body {
         margin: 0;
         line-height: 0;
+        height :100vh;
+        width: 100vw;
       }
       .open-modal {
         position: absolute;
-        right: 3em;
-        bottom: 3em;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 1em;
       }
       ::backdrop {
         backdrop-filter: blur(8px);
+      }
+      dialog {
+        border-radius: 2em;
       }
       #description-container {
         line-height: initial;
@@ -50,26 +57,43 @@
           button {
             font-size: 1.2em;
             padding: 0.5em 2em;
+            border-radius: 0.5em;
+            background: #eeeeff;
+            border: solid 4px #332244;
           }
         }
+      }
+
+      .button {
+        display: block;
+        width: 1.7em;
+        height: 1.7em;
+        border-radius: .5em;
+        background: #332244;
+        border: 4px solid #ddbbff;
+        color: #ddbbff;
+        font-size: 2em;
+        font-weight: bold;
       }
     </style>
   </head>
   <body>
     <canvas id="canvas"></canvas>
-    <button class="open-modal" command="show-modal" commandfor="description">説明</button>
+    <button class="open-modal button" command="show-modal" commandfor="description">?</button>
     <dialog id="description">
       <div id="description-container">
         <h2>最強単語決定戦</h2>
         <h3>遊び方</h3>
-        表示された2個の単語のうち、強いと思った方にマルを付ける
+        表示された2個の単語のうち、強いと思った方に指でマルを付ける
         <h3>飽きたら</h3>
         文学部に行って単語ランキングを見よう
         <h3>単語追加</h3>
-        <a href="https://forms.gle/akS5fB8XF1fL9JFW6">formで行えます。</a>
+        <a href="https://forms.gle/akS5fB8XF1fL9JFW6">formで行えます</a>
+        <h3>バグ報告</h3>
+        <a href="https://forms.gle/11FmNoCexArqvMxa6">formで行えます</a>
         <h3>解答コード</h3>
         <details>
-          <summary>文学部に行ったら使い方が分かる。</summary>
+          <summary>文学部に行ったら使い方が分かる</summary>
           <div id="QR"></div>
           <button id="clear-history">履歴クリア</button>
         </details>

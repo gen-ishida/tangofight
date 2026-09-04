@@ -1,38 +1,37 @@
 let mousePoints = [], isMouseDown = false;
 function initDrawer() {
-  canvas.addEventListener('touchstart', e => {
+  viewCanvas.addEventListener('touchstart', e => {
     isMouseDown = true;
-    mousePoints = [[e.touches[0].clientX, e.touches[0].clientY]];
+//    mousePoints = [[e.touches[0].clientX, e.touches[0].clientY]];
   });
-  canvas.addEventListener('touchmove', e => {
+  viewCanvas.addEventListener('touchmove', e => {
     if (!isMouseDown) {
       return;
     }
-    const newPoint = [e.touches[0].clientX, e.touches[0].clientY];
-    //!なんかありえない点が打たれるので応急処置
-/*    if (dist(newPoint, mousePoints.at(-1)) >= len(canvasSize)*0.3) {
-      return;
-    }*/
     mousePoints.push([e.touches[0].clientX, e.touches[0].clientY]);
   });
-  canvas.addEventListener('touchend', e => {
+  viewCanvas.addEventListener('touchend', e => {
     isMouseDown = false;
     const circleSize = Math.abs(GaussGreen(mousePoints))/(canvasSize[0]*canvasSize[1]);
     if (circleSize > 0.02) {
       const center = divv(ave(mousePoints),canvasSize);
       if (center[1] < 0.4) {
-        addHistory(QNow[0]);
+        updateQ(QNow[0]);
       }
       if (center[1] > 0.6) {
-        addHistory(QNow[1]);
+        updateQ(QNow[1]);
       }
-      updateQ();
     }
     mousePoints = [];
   });
 }
 
-function updateQ() {
+function updateQ(Q) {
+  if (getHistory().length > 1000) {
+    alert('遊びすぎ！スマホ見てる暇あったら文学部に来い');
+    return;
+  }
+  addHistory(Q);
   t0 = Date.now()/1000;
   QNow = QTable.next().value;
   seed1 = Math.random();
@@ -43,10 +42,14 @@ function mouseLine() {
 
   if (mousePoints.length) {
     for (let i = 0; i < mousePoints.length-1; i++) {
+      //!!!謎バグ
+      if (i <= 1) {
+        continue;
+      }
       ctx.lineCap = 'round';
-      const color = 0.6 + 0.4*0.98**(mousePoints.length-i);
-      ctx.strokeStyle = `hsl(0,${100*color}%,${50*color}%)`;
-      ctx.lineWidth = canvasSize[1]*0.02*color;
+      const color = 0.96**(mousePoints.length-i);
+      ctx.strokeStyle = `hsl(${mix(200,80,color)},${mix(45,75,color)}%,${mix(80,60,color)}%)`;//`hsl(200,45%,80%)`;
+      ctx.lineWidth = canvasSize[1]*0.02*(0.4+0.6*color);
       ctx.beginPath();
       ctx.moveTo(...mousePoints[i]);
       ctx.lineTo(...mousePoints[i+1]);
@@ -100,7 +103,7 @@ function wordFrame(topLeft,frameSize,text,seed) {
 function gyobiFrame() {
   ctx.fillStyle = colorPalette.bg;
   ctx.fillRect(...mulv(canvasSize,[0,0.45]),...mulv(canvasSize,[1,0.1]));
-  ctx.strokeStyle = colorPalette.line;
+  ctx.strokeStyle = colorPalette.bg2;
   ctx.lineWidth = canvasSize[1]*0.003;
   const padding = muls([1,1],0.012*canvasSize[1]);
   ctx.strokeRect(...add(mulv(canvasSize,[0,0.45]),padding),...sub(mulv(canvasSize,[1,0.1]),muls(padding,2)));
@@ -174,7 +177,7 @@ function grid(coord,size) {
   ctx.fillStyle = colorPalette.bg;
   ctx.fillRect(...coord,...[size,size]);
 
-  ctx.strokeStyle = colorPalette.line;
+  ctx.strokeStyle = colorPalette.bg2;
   ctx.setLineDash([]);
   ctx.lineWidth = size*0.02;
   ctx.strokeRect(...coord,...[size,size]);
@@ -221,3 +224,5 @@ const muls = ([x,y], c) => [x*c,y*c],
   dist = (a,b) => len(sub(a,b)),
   sum = arr => arr.reduce((a,c)=>add(a,c),[0,0]),
   ave = arr => divs(sum(arr), arr.length);
+
+const mix = (x,y,a) => (1-a)*x+a*y;

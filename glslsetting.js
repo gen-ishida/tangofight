@@ -29,9 +29,6 @@ let program,uniformTypes,uniformLocation,tex;
 function loadGlsl(canvasSize) {
   uniformTypes = execUniform(uniform(t));
 
-  canvasGlsl = document.createElement('canvas');
-  [canvasGlsl.width,canvasGlsl.height] = canvasSize;
-
   gl = canvasGlsl.getContext('webgl2',{preserveDrawingBuffer:true});
   gl.clearColor(0,0,0,1);
 
@@ -43,20 +40,6 @@ function loadGlsl(canvasSize) {
   createAttrib(program,'p',createVBO([[-1, 1, 0],[-1,-1, 0],[1,-1, 0],[1, 1, 0]].flat()),{size:3});
 
   uniformLocation = getUniformLocation(uniformTypes);
-
-
-  ///////////////////////////////////
-  //// ここ作業中！！！
-  ///////////////////////////////////
-  /*
-  tex = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, tex);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
-  gl.generateMipmap(gl.TEXTURE_2D);
-  gl.bindTexture(gl.TEXTURE_2D, null);
-
-  //        gl.bindTexture(gl.TEXTURE_2D, texture);
-  //        gl.uniform1i(uniLocation[1], 0);*/
 };
 
 function updateGlsl({dt,scale1,scale2,isbg,seed1,seed2}) {
