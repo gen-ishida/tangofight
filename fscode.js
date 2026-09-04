@@ -1,4 +1,6 @@
 const fsCode = `
+precision highp float;
+
 #define repeatNum 3.
 float max2(vec2 v) {return max(v.x,v.y);}
 float min2(vec2 v) {return min(v.x,v.y);}
@@ -104,8 +106,8 @@ float noise(vec2 uv,float t) {
             +4.*vec3(fbm(4.*vec3(uv*.1,t*.01)),fbm(4.*vec3(uv*.1,2)),t*.01)));
 }
 
-vec4 plane(vec2 uv,float i,float px) {
-    float a = hash31(vec3(floor(uv),0));
+vec4 plane(vec2 uv,float i,float px,float seed) {
+    float a = hash31(vec3(floor(uv),seed));
 	float b = (
         a<.1
             ? black(uv,px)
@@ -122,7 +124,7 @@ vec4 plane(vec2 uv,float i,float px) {
 
 
 
-vec4 bg(vec2 uv,float px0) {
+vec4 bg(vec2 uv,float px0,float seed) {
     vec4 o = vec4(0);
 
     vec2 uv0 = uv*px0;
@@ -136,7 +138,7 @@ vec4 bg(vec2 uv,float px0) {
     for (float i=0.;i<repeatNum;i++) {
         px1 = px0*pow(2.,repeatNum-i);
         uv1 = center+uv*px1;
-        o = blend(o,plane(uv1,i,px1));
+        o = blend(o,plane(uv1,i,px1,seed));
     }
     o.a = 1.;
     return o;
@@ -158,9 +160,13 @@ void main() {
             : uv.y < 0.45*resolution.y
             ? 1./scale2
             : 1.;
-
-        o = bg(uv0,px0);
-
+        float seed = 
+            uv.y > 0.55*resolution.y
+            ? seed1
+            : uv.y < 0.45*resolution.y
+            ? seed2
+            : 0.;
+        o = bg(uv0,px0,seed);
     } else {
         o = vec4(colorPalette(noise(uv*4./min(resolution.x,resolution.y),t)),1.);
     }

@@ -5,11 +5,13 @@ const uniform = t => t.u([
   t.p('resolution',t.f(2)),
   t.p('mouse',t.f(2)),
   t.p('scale1',t.f()),
+  t.p('seed1',t.f()),
+  t.p('seed2',t.f()),
   t.p('scale2',t.f()),
   t.p('isbg',t.f()),
 ]);
 
-function jsData(time,resolution,mouse,scale1,scale2,isbg) {
+function jsData(time,resolution,mouse,scale1,scale2,isbg,seed1,seed2) {
   return {
     t:time,
     resolution,
@@ -17,6 +19,8 @@ function jsData(time,resolution,mouse,scale1,scale2,isbg) {
     scale1,
     scale2,
     isbg,
+    seed1,
+    seed2,
   };
 }
 
@@ -55,16 +59,14 @@ function loadGlsl(canvasSize) {
   //        gl.uniform1i(uniLocation[1], 0);*/
 };
 
-function updateGlsl({dt,scale1,scale2,isbg}) {
+function updateGlsl({dt,scale1,scale2,isbg,seed1,seed2}) {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  const uniformData = jsData(dt,canvasSize,[0,0],scale1,scale2,isbg);
+  const uniformData = jsData(dt,canvasSize,[0,0],scale1,scale2,isbg,seed1,seed2);
   sendData(uniformTypes,uniformLocation,uniformData);
 
   gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
   gl.flush();
-
-  //window.requestAnimationFrame(draw);
 }
 
 const sat = x => Math.max(0,Math.min(1,x));
