@@ -2,9 +2,9 @@ let mousePoints = [], isMouseDown = false;
 function initDrawer() {
   viewCanvas.addEventListener('touchstart', e => {
     isMouseDown = true;
-//    mousePoints = [[e.touches[0].clientX, e.touches[0].clientY]];
   });
   viewCanvas.addEventListener('touchmove', e => {
+    e.preventDefault();
     if (!isMouseDown) {
       return;
     }
@@ -48,7 +48,7 @@ function mouseLine() {
       }
       ctx.lineCap = 'round';
       const color = 0.96**(mousePoints.length-i);
-      ctx.strokeStyle = `hsl(${mix(200,80,color)},${mix(45,75,color)}%,${mix(80,60,color)}%)`;//`hsl(200,45%,80%)`;
+      ctx.strokeStyle = `hsl(${mix(200,80,color)},${mix(45,75,color)}%,${mix(80,80,color)}%)`;
       ctx.lineWidth = canvasSize[1]*0.02*(0.4+0.6*color);
       ctx.beginPath();
       ctx.moveTo(...mousePoints[i]);

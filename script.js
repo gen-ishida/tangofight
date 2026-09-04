@@ -46,7 +46,6 @@ const colorPalette = {
   bg: '#222222',
   text: '#eeeeee',
   bg2: '#666666',
-  bg3: '#222222',
 }
 
 const choose = arr => arr[Math.floor(Math.random()*arr.length)];
@@ -74,15 +73,6 @@ function main() {
     dt,
     scale1:getGridSize(mulv(canvasSize,[1,0.45]),QNow[0]),
     scale2:getGridSize(mulv(canvasSize,[1,0.45]),QNow[1]),
-    isbg:0,
-    seed1,
-    seed2,
-  });
-
-  updateGlsl({
-    dt,
-    scale1:getGridSize(mulv(canvasSize,[1,0.45]),QNow[0]),
-    scale2:getGridSize(mulv(canvasSize,[1,0.45]),QNow[1]),
     isbg:1,
     seed1,
     seed2,
@@ -91,7 +81,6 @@ function main() {
   ctx.fillRect(0,0,...canvasSize);
   ctx.drawImage(canvasGlsl, 0, 0);
 
-  //ctx.globalCompositeOperation = "screen";
   ctx.fillStyle = colorPalette.bg3;
 
   wordFrame(
@@ -107,8 +96,9 @@ function main() {
     QNow[1],
     0.01
   );
-
+//  ctx.globalCompositeOperation = 'xor';
   gyobiFrame();
+//  ctx.globalCompositeOperation = 'source-over';
 
   mouseLine();
 
@@ -137,10 +127,14 @@ function getGridSize(frameSize,text) {
 
 
 function resizeCanvas() {
-  canvasSize
-    = [canvas.width,canvas.height]
-    = [viewCanvas.width,viewCanvas.height]
-    = [canvasGlsl.width,canvasGlsl.height]
-    = [window.innerWidth,window.innerHeight];
-  gl.viewport(0, 0, ...canvasSize);
+  viewCanvas.style.display = 'none';
+  requestAnimationFrame(()=>{
+    canvasSize
+      = [canvas.width,canvas.height]
+      = [viewCanvas.width,viewCanvas.height]
+      = [canvasGlsl.width,canvasGlsl.height]
+      = [window.innerWidth,window.innerHeight];
+    gl.viewport(0, 0, ...canvasSize);
+    viewCanvas.style.display = 'block';
+  });
 }

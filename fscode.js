@@ -147,7 +147,7 @@ vec4 bg(vec2 uv,float px0,float seed) {
 void main() {
     vec2 uv = gl_FragCoord.xy;
 
-    if(isbg > .5) {
+    //if(isbg > .5) {
         vec2 uv0 = 
             uv.y > 0.55*resolution.y
             ? uv-resolution*vec2(.5,(0.55+1.0)*.5)
@@ -167,8 +167,8 @@ void main() {
             ? seed2
             : 0.;
         o = bg(uv0,px0,seed);
-    } else {
+    /*} else {
         o = vec4(colorPalette(noise(uv*4./min(resolution.x,resolution.y),t)),1.);
-    }
+    }*/
 }
 `
