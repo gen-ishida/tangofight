@@ -36,6 +36,8 @@ function updateQ(Q) {
   QNow = QTable.next().value;
   seed1 = Math.random();
   seed2 = Math.random();
+  document.getElementById('a1').href = `https://www.google.com/search?${new URLSearchParams({q:QNow[0]})}`;
+  document.getElementById('a2').href = `https://www.google.com/search?${new URLSearchParams({q:QNow[1]})}`;
 }
 
 function mouseLine() {

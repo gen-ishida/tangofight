@@ -36,6 +36,9 @@ window.addEventListener('DOMContentLoaded',async e=>{
     colorLight : "#ffffff",
     correctLevel : QRCode.CorrectLevel.L
   });
+  document.getElementById('a1').href = `https://www.google.com/search?${new URLSearchParams({q:QNow[0]})}`;
+  document.getElementById('a2').href = `https://www.google.com/search?${new URLSearchParams({q:QNow[1]})}`;
+
   for (;;) {
     main();
     await new Promise(r=>requestAnimationFrame(r));
@@ -67,8 +70,8 @@ let seed1 = Math.random(),
   seed2 = Math.random();
 function main() {
   ctx.clearRect(0,0,...canvasSize);
-
-  dt = Date.now()/1000 - t0;
+  //適当
+  dt = (Date.now()/1000 - t0)%10000;
   updateGlsl({
     dt,
     scale1:getGridSize(mulv(canvasSize,[1,0.45]),QNow[0]),

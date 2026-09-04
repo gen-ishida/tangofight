@@ -21,8 +21,23 @@
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        bottom: 1em;
+        bottom: .5em;
       }
+
+      #a1 {
+        position: absolute;
+        right: 1em;
+        top: 35%;
+        transform: translateY(-50%);
+      }
+
+      #a2 {
+        position: absolute;
+        right: 1em;
+        top: 90%;
+        transform: translateY(-50%);
+      }
+
       ::backdrop {
         backdrop-filter: blur(8px);
       }
@@ -68,7 +83,7 @@
         width: 1.7em;
         height: 1.7em;
         border-radius: .5em;
-        background: #332244;
+        background: #332244cc;
         border: 4px solid #ddbbff;
         color: #ddbbff;
         font-size: 2em;
@@ -79,18 +94,20 @@
   <body>
     <canvas id="canvas"></canvas>
     <button id="open-modal" class="open-modal button" command="show-modal" commandfor="description">?</button>
-    <!--button id="like1" class="button" command="show-modal" commandfor="description">♡</button-->
+    <a id="a1" target="_blank"><button class="button">!</button></a>
+    <a id="a2" target="_blank"><button class="button">!</button></a>
+
     <dialog id="description">
       <div id="description-container">
         <h2>最強単語決定戦</h2>
         <h3>遊び方</h3>
-        表示された2個の単語のうち、強いと思った方に指でマルを付ける
+        表示された2個の実在単語のうち、強いと思った方に指でマルを付ける<br>
+        知らない単語は!ボタンで検索可能
         <h3>飽きたら</h3>
         文学部に行って単語ランキングを見よう
-        <h3>単語追加</h3>
-        <a href="https://forms.gle/akS5fB8XF1fL9JFW6">formで行えます</a>
-        <h3>バグ報告</h3>
-        <a href="https://forms.gle/11FmNoCexArqvMxa6">formで行えます</a>
+        <a href="https://forms.gle/akS5fB8XF1fL9JFW6"><h3>単語追加フォーム</h3></a>
+        どしどし追加お願いします、足りないので
+        <a href="https://forms.gle/11FmNoCexArqvMxa6"><h3>バグ報告フォーム</h3></a>
         <h3>解答コード</h3>
         <details>
           <summary>文学部に行ったら使い方が分かる</summary>
